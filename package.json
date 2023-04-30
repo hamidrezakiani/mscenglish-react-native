@@ -9,10 +9,26 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-community/netinfo": "9.3.5",
+    "@react-navigation/bottom-tabs": "^6.5.3",
+    "@react-navigation/drawer": "^6.5.7",
+    "@react-navigation/native": "^6.1.2",
+    "@react-navigation/native-stack": "^6.9.8",
     "expo": "~47.0.12",
+    "expo-asset": "~8.7.0",
+    "expo-file-system": "~15.1.1",
+    "expo-linking": "~3.3.0",
+    "expo-localization": "~14.0.0",
+    "expo-splash-screen": "~0.17.5",
+    "expo-sqlite": "~11.0.0",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-native": "0.70.5",
+    "react-native-autocomplete-dropdown": "^2.1.0",
+    "react-native-dropdown-autocomplete": "^1.0.18",
+    "react-native-gesture-handler": "~2.8.0",
+    "react-native-reanimated": "~2.12.0",
+    "react-native-render-html": "^6.3.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
