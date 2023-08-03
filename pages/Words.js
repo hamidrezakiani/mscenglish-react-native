@@ -17,13 +17,14 @@ const Words = props => {
     const [page, setPage] = useState(props.route.params.page);
     const [countPage, setCountPage] = useState(props.route.params.countPage);
     const [goTo,setGoTo] = useState(0);
-    const countWord = Dimensions.get("window").height > 750 ? 5 : 4;
+    const countWord = Dimensions.get("window").height > 720 ? 5 : 4;
     const [disableButtons,setDisableButtons] = useState(false);
     const [disableNext,setDisableNext] = useState(false);
     const [disablePrevious,setDisablePrevious] = useState(false);
     const [nextOpacity,setNextOpacity] = useState(1);
     const [previousOpacity,setPreviousOpacity] = useState(1);
-    console.log("Dimensions : ", Dimensions.get("window").height);
+    console.log("screen Dimensions : ", Dimensions.get("screen").height);
+    console.log("window Dimensions : ", Dimensions.get("window").height);
     const [words, setWords] = useState([
       {
         word: "",
@@ -77,6 +78,7 @@ const Words = props => {
           null,
           (txObj, resultSet) => {
             if (resultSet.rows._array.length == 0) {
+              if(page > 1)
               setPage(page - 1);
             } else {
               setWords([...resultSet.rows._array]);
@@ -258,7 +260,7 @@ const Words = props => {
           <View style={{
             display:'flex',
             width:'100%',
-            flex:countWord - words.length + 2.5,
+            flex:countWord - words.length + 2.5, 
             flexDirection:'row',
             paddingBottom:countWord * 2,
             alignItems:'flex-end',
@@ -329,7 +331,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
-    height:'100%'
+    height: Dimensions.get('window').height - 50
   },
   pageNumber: {
     flex: 2,

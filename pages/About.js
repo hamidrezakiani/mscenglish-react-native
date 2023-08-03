@@ -18,6 +18,7 @@ const About = (props) => {
   const [text, setText] = useState("<html></html>");
   const { width } = useWindowDimensions();
 
+  
   useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(

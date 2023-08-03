@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-community/netinfo": "9.3.5",
     "@react-navigation/bottom-tabs": "^6.5.3",
     "@react-navigation/drawer": "^6.5.7",
@@ -28,7 +29,8 @@
     "react-native-dropdown-autocomplete": "^1.0.18",
     "react-native-gesture-handler": "~2.8.0",
     "react-native-reanimated": "~2.12.0",
-    "react-native-render-html": "^6.3.4"
+    "react-native-render-html": "^6.3.4",
+    "expo-build-properties": "~0.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

@@ -1,0 +1,14 @@
+{
+    "files.autoSave": "off",
+    "editor.formatOnPaste": false,
+    "html.format.enable": true,
+    "json.format.enable": true,
+    "javascript.format.enable": true,
+    "javascript.format.insertSpaceAfterCommaDelimiter": true,
+    "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+    "javascript.format.insertSpaceAfterKeywordsInControlFlowStatements": true,
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": true,
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+    "javascript.format.insertSpaceAfterSemicolonInForStatements": true,
+    "typescript.format.enable": true
+}

@@ -96,9 +96,9 @@ const PassageTestAnswerSheet = (props) => {
         <View style={styles.test} key={index}>
           <View style={styles.box}>
             <Text style={styles.reading}>passage {index + 1} :</Text>
-            <RenderHtml contentWidth={width} source={{ html: reading.text }} />
+            <RenderHtml contentWidth={width} tagsStyles={{ body: {color:'#444' } }} source={{ html: reading.text }} />
             <Text style={styles.reading_fa}>ترجمه :</Text>
-            <RenderHtml contentWidth={width} source={{ html: reading.translate }} />
+            <RenderHtml contentWidth={width} systemFonts={["Vazir"]} tagsStyles={{ body: { fontFamily: "Vazir",color:'#444' } }} source={{ html: reading.translate }} />
           </View>
           {reading.questions.map((question, questionIndex) => {
             const solve =

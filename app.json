@@ -7,9 +7,8 @@
     "icon": "./assets/custom-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/custom-splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "contain",
+      "backgroundColor": "#220c5c"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -22,18 +21,33 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/custom-adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.hamidxmir.mscenglish"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/custom-favicon.png"
     },
     "extra": {
       "eas": {
         "projectId": "606b385c-9707-4da6-8260-b5a07ce08104"
       }
-    }
+    },
+    "plugins":[
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 31,
+            "targetSdkVersion": 31,
+            "buildToolsVersion": "31.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "13.0"
+          }
+        }
+      ]
+    ]
   }
 }

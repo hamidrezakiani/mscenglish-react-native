@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import { View, Text,TextInput, ScrollView,StyleSheet,Pressable } from "react-native";
+import { View, Text,TextInput, ScrollView,StyleSheet,Pressable,Dimensions } from "react-native";
 import * as SQLite from "expo-sqlite";
 const db = SQLite.openDatabase("english1.db");
 import { FontAwesome } from "@expo/vector-icons";
@@ -67,7 +67,7 @@ const SimilarWords = props => {
    useEffect(() => {
       db.transaction((tx) => {
         tx.executeSql(
-          `SELECT * FROM similar_words ORDER BY orderIndex LIMIT 9 OFFSET ${start}`,
+          `SELECT * FROM similar_words ORDER BY orderIndex LIMIT 6 OFFSET ${start}`,
           null,
           (txObj, resultSet) => {
             if (resultSet.rows._array.length == 0)
@@ -187,12 +187,11 @@ const SimilarWords = props => {
         })
     }
     return (
-      <ScrollView
+      <View
         style={{
           backgroundColor: "#220c5c",
           paddingStart: 10,
           paddingEnd: 10,
-          paddingTop: 20,
         }}
       >
         <View style={styles.container}>
@@ -235,37 +234,47 @@ const SimilarWords = props => {
             </Pressable>
           </View>
           {showWords()}
-          <Pressable
-            disabled={disableButtons || disablePrevious}
-            style={[styles.lastPage, { opacity: previousOpacity }]}
-            onPress={() => {
-              var targetPage = page;
-              if (page != 1) targetPage--;
-              updateCurrentPage(targetPage);
-              setPage(targetPage);
-              props.route.params.setPage(targetPage);
-              setDisableButtons(true);
-            }}
-          >
-            <Text style={{ fontFamily: "Vazir" }}>صفحه قبل</Text>
-          </Pressable>
-          <Text style={styles.pageNumber}>{Number.parseInt(page)}</Text>
-          <Pressable
-            disabled={disableButtons || disableNext}
-            style={[styles.nextPage,{opacity:nextOpacity}]}
-            onPress={() => {
-              var targetPage = page;
-              targetPage++;
-              updateCurrentPage(targetPage);
-              setPage(targetPage);
-              props.route.params.setPage(targetPage);
-              setDisableButtons(true);
-            }}
-          >
-            <Text style={{ fontFamily: "Vazir" }}>صفحه بعد</Text>
-          </Pressable>
+          <View style={{
+            display:'flex',
+            width:'100%',
+            flex:1,
+            flexDirection:'row',
+            paddingBottom:10,
+            paddingTop:10,
+            alignItems:'flex-end',
+          }}>
+            <Pressable
+              disabled={disableButtons || disablePrevious}
+              style={[styles.lastPage, { opacity: previousOpacity }]}
+              onPress={() => {
+                var targetPage = page;
+                if (page != 1) targetPage--;
+                updateCurrentPage(targetPage);
+                setPage(targetPage);
+                props.route.params.setPage(targetPage);
+                setDisableButtons(true);
+              }}
+            >
+              <Text style={{ fontFamily: "Vazir" }}>صفحه قبل</Text>
+            </Pressable>
+            <Text style={styles.pageNumber}>{Number.parseInt(page)}</Text>
+            <Pressable
+              disabled={disableButtons || disableNext}
+              style={[styles.nextPage, { opacity: nextOpacity }]}
+              onPress={() => {
+                var targetPage = page;
+                targetPage++;
+                updateCurrentPage(targetPage);
+                setPage(targetPage);
+                props.route.params.setPage(targetPage);
+                setDisableButtons(true);
+              }}
+            >
+              <Text style={{ fontFamily: "Vazir" }}>صفحه بعد</Text>
+            </Pressable>
+          </View>
         </View>
-      </ScrollView>
+      </View>
     );
 }
 
@@ -273,43 +282,44 @@ export default SimilarWords;
 
 const styles = StyleSheet.create({
   searchBox: {
+    height:30,
     display: "flex",
     flexDirection: "row-reverse",
     justifyContent: "space-evenly",
     marginBottom: 5,
   },
   searchInput: {
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
     color: "#000",
     width: "89%",
     borderBottomRightRadius: 10,
     borderTopRightRadius: 10,
     fontFamily: "Vazir",
-    paddingRight:6
+    paddingRight: 6,
   },
   searchButton: {
     width: "10%",
     marginEnd: "1%",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    height: Dimensions.get('window').height - 50
   },
   pageNumber: {
     flex: 2,
-    paddingTop: 14,
+    paddingBottom: 8,
     textAlign: "center",
-    color: "white",
+    color: "#f2f2f2",
     fontFamily: "Vazir",
     fontSize: 20,
   },
   lastPage: {
-    backgroundColor: "white",
+    backgroundColor: "#f2f2f2",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 8,
@@ -320,9 +330,10 @@ const styles = StyleSheet.create({
     borderColor: "navy",
     borderWidth: 1,
     borderRadius: 10,
+    height:50
   },
   nextPage: {
-    backgroundColor: "white",
+    backgroundColor: "#f2f2f2",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 8,
@@ -333,11 +344,12 @@ const styles = StyleSheet.create({
     borderColor: "navy",
     borderWidth: 1,
     borderRadius: 10,
+    height:50,
   },
   counter: {
     fontSize: 20,
     backgroundColor: "#220c5c",
-    color: "white",
+    color: "#f2f2f2",
     borderRadius: 10,
     alignSelf: "flex-end",
     textAlign: "center",
@@ -355,11 +367,14 @@ const styles = StyleSheet.create({
     paddingEnd: 5,
     fontSize: 15,
     fontFamily: "Vazir",
+    flex:1
   },
   box: {
-    backgroundColor: "white",
+    flex: 2,
+    backgroundColor: "#fff",
     marginBottom: 4,
-    padding: 7,
+    padding: 5,
     width: "100%",
+    maxHeight:120,
   },
 });

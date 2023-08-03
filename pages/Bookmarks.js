@@ -6,25 +6,27 @@ import {
   StyleSheet,
   TextInput,
   Pressable,
+  Dimensions
 } from "react-native";
 import * as SQLite from "expo-sqlite";
 const db = SQLite.openDatabase("english1.db");
 import { FontAwesome } from "@expo/vector-icons";
 import { color } from "react-native-reanimated";
 const Bookmarks = (props) => {
-  console.log(props.route.params);
-   const [page, setPage] = useState(props.route.params.page);
-   const [countPage, setCountPage] = useState(props.route.params.countBookmarkPage);
-   const [disableButtons, setDisableButtons] = useState(false);
-   const [disableNext, setDisableNext] = useState(false);
-   const [disablePrevious, setDisablePrevious] = useState(false);
-   const [nextOpacity, setNextOpacity] = useState(1);
-   const [previousOpacity, setPreviousOpacity] = useState(1);
-   const [goTo, setGoTo] = useState(0);
-   if(page > countPage)
-   {
-       setPage(countPage)
-   }
+  console.log(props.route.params.page);
+  const [page, setPage] = useState(props.route.params.page);
+  const [countPage, setCountPage] = useState(props.route.params.countBookmarkPage);
+  const countWord = Dimensions.get("window").height > 720 ? 5 : 4;
+  const [disableButtons, setDisableButtons] = useState(false);
+  const [disableNext, setDisableNext] = useState(false);
+  const [disablePrevious, setDisablePrevious] = useState(false);
+  const [nextOpacity, setNextOpacity] = useState(1);
+  const [previousOpacity, setPreviousOpacity] = useState(1);
+  const [goTo, setGoTo] = useState(1);
+  console.log(`page : ${page}-count page : ${countPage}`)
+  if (page > countPage && countPage != 0) {
+    setPage(countPage)
+  }
   const [words, setWords] = useState([
     {
       word: "",
@@ -81,29 +83,10 @@ const Bookmarks = (props) => {
       translation: "",
       id: 11,
     },
-    {
-      word: "",
-      translation: "",
-      id: 12,
-    },
-    {
-      word: "",
-      translation: "",
-      id: 13,
-    },
-    {
-      word: "",
-      translation: "",
-      id: 14,
-    },
-    {
-      word: "",
-      translation: "",
-      id: 15,
-    },
   ]);
   const start = (page - 1) * 5;
-  if (page == countPage && !disableNext) {
+  console.log(`page : ${page}-count page ${countPage}`)
+  if (page >= countPage && !disableNext) {
     setDisableNext(true);
     setNextOpacity(0.5);
   } else if (page < countPage && disableNext) {
@@ -111,14 +94,14 @@ const Bookmarks = (props) => {
     setNextOpacity(1);
   }
 
-  if (page == 1 && !disablePrevious) {
-    setDisablePrevious(true);
-    setPreviousOpacity(0.5);
-  } else if (page > 1 && disablePrevious) {
+  if (page > 1 && disablePrevious) {
     setDisablePrevious(false);
     setPreviousOpacity(1);
+  } else if (page < 2 && !disablePrevious) {
+    setDisablePrevious(true);
+    setPreviousOpacity(0.5);
   }
-   const getWords = () => {
+  const getWords = () => {
     db.transaction((tx) => {
       tx.executeSql(
         `SELECT COUNT(id) FROM words WHERE bookmark=1`,
@@ -127,8 +110,7 @@ const Bookmarks = (props) => {
           var newCountPage = Math.ceil(
             resultSet.rows._array[0]["COUNT(id)"] / 5
           );
-          if (countPage != newCountPage)
-          {
+          if (countPage != newCountPage) {
             props.route.params.setCountBookmarkPage(newCountPage);
             setCountPage(newCountPage);
           }
@@ -137,22 +119,22 @@ const Bookmarks = (props) => {
         (error) => console.log(error)
       );
     });
-          db.transaction((tx) => {
-            tx.executeSql(
-              `SELECT * FROM words WHERE bookmark=1 ORDER BY orderIndex LIMIT 5 OFFSET ${start}`,
-              null,
-              (txObj, resultSet) => {
-                setWords([...resultSet.rows._array]);
-                setDisableButtons(false);
-              },
-              (error) => console.log(error)
-            );
-          });
-   }
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM words WHERE bookmark=1 ORDER BY orderIndex LIMIT ${countWord} OFFSET ${start}`,
+        null,
+        (txObj, resultSet) => {
+          setWords([...resultSet.rows._array]);
+          setDisableButtons(false);
+        },
+        (error) => console.log(error)
+      );
+    });
+  }
 
-    useEffect(() => {
-        getWords();
-    }, [page]);
+  useEffect(() => {
+    getWords();
+  }, [page]);
   const bookmark = (value, id, index) => {
     // var newWords = [...words];
     // newWords.splice(index,1);
@@ -162,8 +144,8 @@ const Bookmarks = (props) => {
         `UPDATE words SET bookmark=? WHERE id=${id}`,
         [value],
         (txObj, resultSet) => {
-           console.log(resultSet);
-           getWords();
+          console.log(resultSet);
+          getWords();
         },
         (error) => console.log(error)
       );
@@ -238,26 +220,37 @@ const Bookmarks = (props) => {
             <Text style={styles.counter}>{item.review} مرور</Text>
           </Pressable>
           <Text style={styles.word}>{item.word}</Text>
-          <Text style={styles.translation}>{item.translation}</Text>
-          <Pressable onPress={() => bookmark(!item.bookmark, item.id, index)}>
-            <FontAwesome
-              style={{ marginStart: 6 }}
-              name="bookmark"
-              size={30}
-              color={color}
-            />
-          </Pressable>
+          <View
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "row-reverse",
+            }}
+          >
+            <Text style={styles.translation}>{item.translation}</Text>
+            <View style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Pressable onPress={() => bookmark(!item.bookmark, item.id, index)}>
+                <FontAwesome
+                  style={{ marginStart: 6 }}
+                  name="bookmark"
+                  size={30}
+                  color={color}
+                />
+              </Pressable></View>
+
+          </View>
+
         </View>
       );
     });
   };
   return (
-    <ScrollView
+    <View
       style={{
         backgroundColor: "#220c5c",
         paddingStart: 10,
         paddingEnd: 10,
-        paddingTop: 20,
+        height: '100%',
       }}
     >
       <View style={styles.container}>
@@ -271,7 +264,7 @@ const Bookmarks = (props) => {
             onChangeText={(value) => setGoTo(value)}
             onSubmitEditing={() => {
               var page = parseInt(goTo);
-              if (page > countPage) page = countPage;
+              if (page > countPage && countPage != 0) page = countPage;
               else if (page < 1 || page == NaN) page = 1;
               updateCurrentPage(page);
               setPage(page);
@@ -295,56 +288,61 @@ const Bookmarks = (props) => {
           </Pressable>
         </View>
         {showWords()}
-        <Pressable
-          disabled={disableButtons || disablePrevious}
-          style={[styles.lastPage, { opacity: previousOpacity }]}
-          onPress={() => {
-            var targetPage = page;
-            if (page != 1) targetPage--;
-            updateCurrentPage(targetPage);
-            setPage(targetPage);
-            props.route.params.setPage(targetPage);
-            setDisableButtons(true);
-          }}
-        >
-          <Text style={{ fontFamily: "Vazir" }}>صفحه قبل</Text>
-        </Pressable>
-        <Text style={styles.pageNumber}>{Number.parseInt(page)}</Text>
-        <Pressable
-          disabled={disableButtons || disableNext}
-          style={[styles.nextPage, { opacity: nextOpacity }]}
-          onPress={() => {
-            var targetPage = page;
-            targetPage++;
-            updateCurrentPage(targetPage);
-            setPage(targetPage);
-            props.route.params.setPage(targetPage);
-            setDisableButtons(true);
-          }}
-        >
-          <Text style={{ fontFamily: "Vazir" }}>صفحه بعد</Text>
-        </Pressable>
+        <View style={{
+          display: 'flex',
+          width: '100%',
+          flex: 1,
+          flexDirection: 'row',
+          paddingBottom: countWord * 2,
+          alignItems: 'flex-end',
+        }}>
+          <Pressable
+            disabled={disableButtons || disablePrevious}
+            style={[styles.lastPage, { opacity: previousOpacity }]}
+            onPress={() => {
+              var targetPage = page;
+              if (page != 1) targetPage--;
+              updateCurrentPage(targetPage);
+              setPage(targetPage);
+              props.route.params.setPage(targetPage);
+              setDisableButtons(true);
+            }}
+          >
+            <Text style={{ fontFamily: "Vazir" }}>صفحه قبل</Text>
+          </Pressable>
+          <Text style={styles.pageNumber}>{Number.parseInt(page)}</Text>
+          <Pressable
+            disabled={disableButtons || disableNext}
+            style={[styles.nextPage, { opacity: nextOpacity }]}
+            onPress={() => {
+              var targetPage = page;
+              targetPage++;
+              updateCurrentPage(targetPage);
+              setPage(targetPage);
+              props.route.params.setPage(targetPage);
+              setDisableButtons(true);
+            }}
+          >
+            <Text style={{ fontFamily: "Vazir" }}>صفحه بعد</Text>
+          </Pressable>
+        </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
 export default Bookmarks;
 
 const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
   searchBox: {
+    height: 30,
     display: "flex",
     flexDirection: "row-reverse",
     justifyContent: "space-evenly",
     marginBottom: 5,
   },
   searchInput: {
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
     color: "#000",
     width: "89%",
     borderBottomRightRadius: 10,
@@ -356,9 +354,60 @@ const styles = StyleSheet.create({
     width: "10%",
     marginEnd: "1%",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    height: Dimensions.get('window').height - 50
+  },
+  pageNumber: {
+    flex: 2,
+    paddingBottom: 8,
+    textAlign: "center",
+    color: "#f2f2f2",
+    fontFamily: "Vazir",
+    fontSize: 20,
+  },
+  lastPage: {
+    backgroundColor: "#f2f2f2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 8,
+    marginStart: 0,
+    marginEnd: 4,
+    padding: 9,
+    flex: 1,
+    borderColor: "navy",
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 50
+  },
+  nextPage: {
+    backgroundColor: "#f2f2f2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 8,
+    marginStart: 4,
+    marginEnd: 0,
+    padding: 9,
+    flex: 1,
+    borderColor: "navy",
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 50,
+  },
+  counter: {
+    fontSize: 20,
+    backgroundColor: "#220c5c",
+    color: "#f2f2f2",
+    borderRadius: 10,
+    alignSelf: "flex-end",
+    textAlign: "center",
+    paddingEnd: 5,
+    paddingStart: 5,
   },
   word: {
     paddingStart: 5,
@@ -371,55 +420,14 @@ const styles = StyleSheet.create({
     paddingEnd: 5,
     fontSize: 15,
     fontFamily: "Vazir",
-  },
-  counter: {
-    fontSize: 20,
-    backgroundColor: "#220c5c",
-    color: "white",
-    borderRadius: 10,
-    alignSelf: "flex-end",
-    textAlign: "center",
-    paddingEnd: 5,
-    paddingStart: 5,
+    flex: 1
   },
   box: {
-    backgroundColor: "white",
+    flex: 2,
+    backgroundColor: "#fff",
     marginBottom: 4,
     padding: 5,
     width: "100%",
-  },
-  pageNumber: {
-    flex: 2,
-    paddingTop: 14,
-    textAlign: "center",
-    color: "white",
-    fontFamily: "Vazir",
-    fontSize: 20,
-  },
-  lastPage: {
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 8,
-    marginStart: 0,
-    marginEnd: 4,
-    padding: 9,
-    flex: 1,
-    borderColor: "navy",
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  nextPage: {
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 8,
-    marginStart: 4,
-    marginEnd: 0,
-    padding: 9,
-    flex: 1,
-    borderColor: "navy",
-    borderWidth: 1,
-    borderRadius: 10,
+    maxHeight: 140,
   },
 });

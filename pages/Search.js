@@ -9,13 +9,13 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 const db = SQLite.openDatabase("english1.db");
 
 const Search = (props) => {
-  const [selectedItem, setSelectedItem] = useState(null);
+  // const [selectedItem, setSelectedItem] = useState(null);
   const [word,setWord] = useState('');
-  const [close,setClose] = useState(1);
+  // const [close,setClose] = useState(1);
   const [submited,setSubmited] = useState(false);
-  const [searchButtonClick, setSearchButtonClick] = useState(false);
+  // const [searchButtonClick, setSearchButtonClick] = useState(false);/
   const [words,setWords] = useState([]);
-  const [searchWord,setSearchWord] = useState('');
+  // const [searchWord,setSearchWord] = useState('');
   const [resultWords,setResultWords] = useState([]);
   const [emptyResultText,setEmptyResultText] = useState('در حال جستجو...');
    const search = (str) => {
@@ -34,6 +34,7 @@ const Search = (props) => {
       if(word == '')
       {
         setWords([]);
+        setEmptyResultText('برای جستجو تایپ کنید');
       }
       else
       {
@@ -151,12 +152,15 @@ const bookmark = (index) => {
           <View style={styles.searchInput}>
             <AutocompleteDropdown
               dataSet={words}
-              clearOnFocus={false}
+              // clearOnFocus={false}
               blurOnSubmit={true}
               closeOnBlur={true}
-              closeOnSubmit={true}
-              clearOnSubmit={true}
-              onFocus={() => setClose(0)}
+              // closeOnSubmit={true}
+              // clearOnSubmit={true}
+              onFocus={() => {
+                setWords([]);
+                setSubmited(false);
+              }}
               controller={(controller) => {
                 // if (close) {
                 //   controller.close();
@@ -180,10 +184,10 @@ const bookmark = (index) => {
               }
               onSelectItem={(value) => {
                 setSubmited(true);
-                setWords([]);
+                // setWords([]);
                 setWord('');
                 search(value ? value.title : "");
-                setWord(value ? value.title : "");
+                // setWord(value ? value.title : "");
               }}
               suggestionsListMaxHeight={300}
               inputContainerStyle={{
@@ -196,13 +200,14 @@ const bookmark = (index) => {
               onChangeText={(value) => {
                 // if (value == "" && !submited) setClose(1);
                 // else setClose(0);
-                setWord(value);
                 setSubmited(false);
+                setWord(value);
                 setEmptyResultText("در حال جستجو...");
               }}
               EmptyResultComponent={
-                word != '' ?
-                <Text style={styles.emptyResult}>{emptyResultText}</Text> : <Text style={{display:'none'}}></Text>
+                <Text style={styles.emptyResult}>{emptyResultText}</Text>
+                // word != '' ?
+                // <Text style={styles.emptyResult}>{emptyResultText}</Text> : <Text style={{display:'none'}}></Text>
               }
             />
           </View>

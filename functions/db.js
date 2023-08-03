@@ -1,11 +1,14 @@
+import React from "react";
 import * as SQLite from "expo-sqlite";
 import NetInfo from "@react-native-community/netinfo";
 const db = SQLite.openDatabase("english1.db");
+const WordModel = require('../Database/Models/Word');
 class Db {
+  wordModel;
   constructor(name, year) {
-
+     this.wordModel = new WordModel();
   }
-
+   
   getMessages(props){
     NetInfo.fetch().then((state) => {
       if (state.isConnected) {
@@ -92,6 +95,138 @@ class Db {
 
   });
   }
+
+
+  updateWords()
+  {
+      new Promise((resolve,reject) => {
+        db.transaction(tx => {
+          tx.executeSql(
+            `SELECT * FROM other WHERE key='last_updated_page'`,
+            null,
+            (txObj,resultSet) => {
+               return resolve(resultSet.rows._array[0].value);
+            },
+            (txObj,error) => {
+                return reject(error);
+            }
+          )
+        })
+      }).then((response) => {
+           console.log(response);
+      }).catch((reason) => {
+          console.log(reason);
+      }) 
+  }
+
+  getWords()
+  {
+    fetch(`http://mscenglish.ir/api/words?flag=app&page=1&updated_at=0`, {
+      method: "GET",
+      //Request Type
+    })
+    .then((response) => response.json())
+    //If response is in json then in success
+    .then((responseJson) => {
+      var words = responseJson.data.data;
+       new Promise((resolve,reject) => {
+        var last_update;
+        db.transaction((tx) => {
+          tx.executeSql(
+            `SELECT * FROM other WHERE key='last_updated_at'`,
+            null,
+            (txObj,resultSet) => {
+                // console.log(resultSet.rows);
+            },
+            (txObj,error) => {
+                console.log('error when try to get last updated_at',error);
+            });
+            words.forEach((item,index) => {
+                console.log(item);
+                last_update = item.updated_at;
+                tx.executeSql(
+                    `SELECT * FROM words WHERE id=${item.id}`,
+                    null,
+                    (txObj, resultSet) => {
+                      if (resultSet.rows.length && !item.deleted_at) {
+                          tx.executeSql(
+                            `UPDATE words SET word=?,translation=?,orderIndex=?,deleted_at=? WHERE id=${item.id}`,
+                            [
+                              item.word,
+                              item.translation,
+                              item.orderIndex,
+                              item.deleted_at,
+                            ],
+                            (txObj, resultSet) => {
+                              // console.log(`${item.id} updated`);
+                            },
+                            (txObj, error) => console.log(error)
+                          );
+                      } else if(!item.deleted_at) {
+                          tx.executeSql(
+                            `INSERT INTO words(id,word,translation,orderIndex,deleted_at) VALUES(?,?,?,?,?)`,
+                            [
+                              item.id,
+                              item.word,
+                              item.translation,
+                              item.orderIndex,
+                              item.deleted_at,
+                            ],
+                            (txObj, resultSet) => {
+                              // console.log(`${item.id} created`);
+                            },
+                            (txObj, error) => console.log(error)
+                          );
+                      }
+                      else
+                      {
+                        tx.executeSql(
+                          `DELETE FROM words WHERE id=${item.id})`,
+                          [],
+                          (txObj, resultSet) => {
+                            // console.log(`${item.id} deleted`);
+                          },
+                          (txObj, error) => console.log(error)
+                        );
+                      }
+                    },
+                    (txObj, error) => console.log(error)
+                  );
+            });
+            
+        },(error) => {
+          console.log('error transaction')
+          return reject();
+        },
+        () => {
+          console.log(`${words.length} rows updated successfully`)
+          return resolve();
+        });
+       }).then(() => {
+          console.log('promise successfull');
+          db.transaction(tx => { 
+          tx.executeSql(
+            `UPDATE other set value=? WHERE key='last_updated_at'`,
+            [last_update],
+            (txObj, resultSet) => {
+              console.log(`last_updated_at update on ${last_update}`);
+            },
+            (txObj, error) => console.log('errorrrrrrrrrrrr',error)
+          );
+          });
+       })
+       .catch((reason) => {
+           console.log('promise failed! reason : ');
+           console.log(reason);
+       })
+    })
+    .catch((reason) => {
+        console.log('Netword Error!!!!!');
+        console.log(reason);
+    })
+
+  }
+
   createDb() {
     new Promise((resolve,reject) => {
       //    db.transaction((tx) => {
@@ -254,6 +389,13 @@ class Db {
                   (txObj, error) => console.log(error)
                 );
               });
+              db.transaction(tx => {
+                  tx.executeSql( "INSERT INTO other (key,value) VALUES('last_updated_at',0),('last_updated_page',0)",
+                  [],
+                  (txObj, resultSet) => console.log(resultSet),
+                  (txObj, error) => console.log(error))
+              });
+
               db.transaction((tx) => {
                 tx.executeSql(
                   "INSERT INTO other (key,value) VALUES(?,?)",
@@ -277,9 +419,12 @@ class Db {
       });
     })
 
+
+    
+
     NetInfo.fetch().then((state) => {
       console.log("First, is " + (state.isConnected ? "online" : "offline"));
-      if (state.isConnected) {
+      if (state.isConnected && false) {
         fetch(`http://mscenglish.ir/api/words?paginate=20`, {
           method: "GET",
           //Request Type
@@ -376,7 +521,10 @@ class Db {
                 //     (txObj, error) => console.log(error)
                 //   );
                 // });
-              });
+              })
+              .catch((error) => {
+                  console.log(er)
+              })
           })
           //If response is not in json then in error
           .catch((error) => {
@@ -886,7 +1034,7 @@ class Db {
            })
            .then((response) => {
              if (response.status.code == 200) {
-               setText(response.data);
+              //  setText(response.data);
                db.transaction((tx) => {
                  tx.executeSql(
                    "UPDATE other SET value=? WHERE key='About'",
