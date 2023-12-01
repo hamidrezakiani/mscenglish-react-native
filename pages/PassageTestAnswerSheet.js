@@ -228,23 +228,27 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "left",
     width: "100%",
+    color:'#222'
   },
   question_fa: {
     fontSize: 18,
     textAlign: "right",
     fontFamily: "Vazir",
     width: "100%",
+    color:'#222'
   },
   answer: {
     fontSize: 14,
     textAlign: "left",
     width: "100%",
+    color:'#222'
   },
   answer_fa: {
     fontSize: 14,
     textAlign: "right",
     width: "100%",
     fontFamily: "Vazir",
+    color:'#222'
   },
   box: {
     backgroundColor: "#fff",

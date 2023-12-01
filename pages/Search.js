@@ -252,11 +252,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderBottomRightRadius: 10,
     borderTopRightRadius: 10,
+    color:'#222',
   },
   emptyResult: {
     textAlign: "center",
     paddingTop: 5,
     paddingBottom: 5,
+    color:'#222',
   },
   counter: {
     fontSize: 20,
@@ -273,12 +275,14 @@ const styles = StyleSheet.create({
     paddingEnd: 5,
     fontSize: 18,
     fontWeight: "500",
+    color:'#222'
   },
   translation: {
     paddingStart: 5,
     paddingEnd: 5,
     fontSize: 15,
     fontFamily: "Vazir",
+    color:'#222',
   },
   box: {
     backgroundColor: "white",

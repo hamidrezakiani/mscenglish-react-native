@@ -18,8 +18,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.hamidxmir.mscenglish"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +30,12 @@
     "web": {
       "favicon": "./assets/custom-favicon.png"
     },
-    "plugins": [
+    "extra": {
+      "eas": {
+        "projectId": "606b385c-9707-4da6-8260-b5a07ce08104"
+      }
+    },
+    "plugins":[
       [
         "expo-build-properties",
         {
@@ -45,11 +49,6 @@
           }
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "24e5eb99-9575-4e52-875e-1ae6defe16b3"
-      }
-    }
-    }
+    ]
+  }
 }

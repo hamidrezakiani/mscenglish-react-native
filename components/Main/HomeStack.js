@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React,{ useState ,useContext} from "react";
 import {Text, Pressable } from "react-native";
 import { Feather ,Ionicons} from "@expo/vector-icons";
 import Home from "../../pages/Home";
@@ -20,6 +20,7 @@ import GrammarList from "../../pages/GrammarList";
 import Grammar from "../../pages/Grammar";
 import Planning from "../../pages/Planning";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { UserContext } from "../../context/UserContext";
 const Stack = createNativeStackNavigator();
 const HomeStack = (props) => {
     const navigation = props.navigation;
@@ -28,8 +29,7 @@ const HomeStack = (props) => {
     const [grammarTitle, setGrammarTitle] = useState('');
     const [passageTestTitle, setPassageTestTitle] = useState('');
     const [newMessagesCount, setNewMessagesCount] = useState(0);
-    const [user,setUser] = useState(props.route.params.user);
-    console.log('home stack',user);
+    const { user, setUser ,getUserProfile} = useContext(UserContext);
     // const db = new Db();
     // db.getMessages({ setNewMessagesCount: (value) => setNewMessagesCount(value) });
     return (
@@ -50,7 +50,6 @@ const HomeStack = (props) => {
         <Stack.Screen
           name="Home"
           component={Home}
-          initialParams={{ getUserProfile:() => props.route.params.getUserProfile(),user:user}}
           options={{
             headerTitle: () => <Text></Text>,
             headerLeft: () => (
@@ -98,8 +97,6 @@ const HomeStack = (props) => {
           name="Words"
           component={Words}
           options={{ headerTitle: "لغات" }}
-  
-        // initialParams={{ setWordPage:(value) => setWordPage(value)}}
         />
         <Stack.Screen
           name="WordTestTutorial"
@@ -154,15 +151,11 @@ const HomeStack = (props) => {
           name="Bookmark"
           component={Bookmarks}
           options={{ headerTitle: "کلمات برگزیده" }}
-  
-        // initialParams={{ setWordPage:(value) => setWordPage(value)}}
         />
         <Stack.Screen
           name="SimilarWords"
           component={SimilarWords}
           options={{ headerTitle: "کلمات مشابه" }}
-  
-        // initialParams={{ setWordPage:(value) => setWordPage(value)}}
         />
         <Stack.Screen
           name="GrammarList"

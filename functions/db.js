@@ -7,6 +7,7 @@ class Db {
   wordModel;
   constructor(name, year) {
      this.wordModel = new WordModel();
+     this.wordModel.test();
   }
    
   getMessages(props){
@@ -229,14 +230,14 @@ class Db {
 
   createDb() {
     new Promise((resolve,reject) => {
-      //    db.transaction((tx) => {
-      //      tx.executeSql(
-      //        "DROP TABLE other",
-      //        null,
-      //        (txObj, resultSet) => console.log("other drop"),
-      //        (error) => console.log(error)
-      //      );
-      //    });
+        //  db.transaction((tx) => {
+        //    tx.executeSql(
+        //      "DROP TABLE other",
+        //      null,
+        //      (txObj, resultSet) => console.log("other drop"),
+        //      (error) => console.log(error)
+        //    );
+        //  });
       //    db.transaction((tx) => {
       //      tx.executeSql(
       //        "DROP TABLE words",
@@ -253,14 +254,14 @@ class Db {
         //      (error) => console.log(error)
         //    );
         //  });
-        // db.transaction((tx) => {
-        //   tx.executeSql(
-        //     "CREATE TABLE IF NOT EXISTS grammars (id INTEGER PRIMARY KEY, title VARCHAR(255),text TEXT)",
-        //     null,
-        //     (txObj, resultSet) => console.log("grammars create"),
-        //     (txObj, error) => console.log(error)
-        //   );
-        // });
+        db.transaction((tx) => {
+          tx.executeSql(
+            "CREATE TABLE IF NOT EXISTS grammars (id INTEGER PRIMARY KEY, title VARCHAR(255),text TEXT)",
+            null,
+            (txObj, resultSet) => console.log("grammars create"),
+            (txObj, error) => console.log(error)
+          );
+        });
       db.transaction((tx) => {
         tx.executeSql(
           "SELECT name FROM sqlite_master WHERE name='other' OR name='words' OR name='similar_words' OR name='word_tests' OR name='word_questions' OR name='word_answers' OR name='reading_tests' OR name='readings' OR name='reading_questions' OR name='reading_answers' OR name='messages'",
@@ -390,7 +391,7 @@ class Db {
                 );
               });
               db.transaction(tx => {
-                  tx.executeSql( "INSERT INTO other (key,value) VALUES('last_updated_at',0),('last_updated_page',0)",
+                  tx.executeSql( "INSERT INTO other (key,value) VALUES('last_updated_at',0),('last_updated_page',0),('current_updating_at',0)",
                   [],
                   (txObj, resultSet) => console.log(resultSet),
                   (txObj, error) => console.log(error))
@@ -424,7 +425,7 @@ class Db {
 
     NetInfo.fetch().then((state) => {
       console.log("First, is " + (state.isConnected ? "online" : "offline"));
-      if (state.isConnected && false) {
+      if (state.isConnected) {
         fetch(`http://mscenglish.ir/api/words?paginate=20`, {
           method: "GET",
           //Request Type

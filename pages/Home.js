@@ -9,6 +9,7 @@ import {
   Dimensions,
   I18nManager,
 } from "react-native";
+import * as WebBrowser from 'expo-web-browser';
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,6 +21,7 @@ const backgroundImage = require("../assets/background.png");
 const lockImage = require("../assets/lock.png");
 import * as Linking from 'expo-linking';
 import { UserContext } from "../context/UserContext";
+
 const Home = (props) => {
   // const [user, setUser] = useState({
   //   name: null,
@@ -29,12 +31,17 @@ const Home = (props) => {
   //   new_user: true,
   //   payStatus: false
   // });
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser ,getUserProfile} = useContext(UserContext);
   const [testText,setTestText] = useState('');
-  //  var url = Linking.useURL();
+  
+  
+  //  console.log(url);
   // useEffect(() => {
-  //   const { hostname, path, queryParams } = Linking.parse(url);
-  //   // console.log(hostname);
+  //   if(url)
+  //   {
+  //     const { hostname, path, queryParams } = Linking.parse(url);
+  //   console.log(hostname,path,queryParams);
+  //   }
   // }, [url]);
   // if (url) {
   //   const { hostname, path, queryParams } = Linking.parse(url);
@@ -55,19 +62,21 @@ const Home = (props) => {
   //   }
   // }
 
+  var url = Linking.useURL();
   useEffect(() => {
     Linking.addEventListener('url', ({url}) => { 
+      console.log(url);
       const { hostname, path, queryParams } = Linking.parse(url);
       if(queryParams.pay == 'success')
        {
-          props.route.params.getUserProfile();
+          getUserProfile();
 
           // getUserData();
        }
     });
     // getUserData();
   }, []);
-  
+
   const PayModal = () => {
      const [discount,setDiscount] = useState(0);
      const [code,setCode] = useState('');
@@ -82,7 +91,7 @@ const Home = (props) => {
    function getAmount()
    {
        setReadyStatus(0);
-       fetch(`http://mscenglish.ir/api/services/amount`,{
+       fetch(`http://mscenglish.ir/api/services/purchases?service=SUBSCRIPTION`,{
          method:'GET',
          headers: {
           Accept: 'application/json',
@@ -210,10 +219,10 @@ const Home = (props) => {
             paddingVertical:5,
          }}
             onPress={() => {
-              Linking.openURL('https://mscenglish.ir/pay');
+              Linking.openURL('https://mscenglish.ir/pay',);
             }}
          >
-             <Text style={{
+             <Text style={{ 
                 fontFamily:'Vazir',
                 fontSize:20,
                 color:'#fff',
@@ -510,6 +519,7 @@ const style = StyleSheet.create({
     fontSize: 25,
     marginTop: 5,
     textAlign: 'center',
+    color:'#222',
   },
   itemPersianText: {
     fontFamily: "Vazir",

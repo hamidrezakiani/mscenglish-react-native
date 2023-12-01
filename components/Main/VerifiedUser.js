@@ -9,10 +9,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons} from "@expo/vector-icons";
 import CustomDrawerContent from "./CustomDrawerContent";
+import { View } from "react-native";
+import TestComponent from "../../pages/TestComponent";
+import { Fragment } from "react";
 const Drawer = createDrawerNavigator();
 export default function VerifiedUser(){
      
-    const { user, setUser,setUserData,setShowSpinner } = useContext(AppContext);
+    const { user, setUser,setUserData,setShowSpinner ,onLayoutRootView} = useContext(AppContext);
     const [updateProfileApiErrors, setUpdateProfileApiErrors] = useState([]);
     const updateProfile = (name = null,invitationCode = null) => {
       console.log('update profile request sent!');
@@ -43,7 +46,8 @@ export default function VerifiedUser(){
           mobile: user.mobile,
           token: user.token,
           verify: user.verify,
-          payStatus: user.payStatus,
+          // payStatus: user.payStatus,
+          payStatus:true,
           new_user:0,
         });
         setUser({
@@ -51,7 +55,8 @@ export default function VerifiedUser(){
           mobile: user.mobile,
           token: user.token,
           verify: user.verify,
-          payStatus: user.payStatus,
+          // payStatus: user.payStatus,
+          payStatus:true,
           new_user:0,
         });
         }
@@ -104,7 +109,8 @@ export default function VerifiedUser(){
             mobile: user.mobile,
             token: user.token,
             verify: user.verify,
-            payStatus: Number.parseInt(response[1].data.payStatus),
+            // payStatus: Number.parseInt(response[1].data.payStatus),
+            payStatus:true,
             new_user:0,
           });
           }
@@ -130,23 +136,21 @@ export default function VerifiedUser(){
       
     if(!user.new_user)
     {
-      return (
-        <UserContext.Provider value={{user:user,setUser:setUser}}>
-        <NavigationContainer /*onLayout={onLayoutRootView}*/>
+      return (<UserContext.Provider value={{user:user,setUser:setUser}}>
+        <NavigationContainer onLayout={onLayoutRootView}>
           <Drawer.Navigator
             drawerContent={CustomDrawerContent}
+            initialRouteName="HomeStack"
             screenOptions={{
               drawerStyle: {
                 backgroundColor: "#220c5c",
-  
-                paddingTop: 50,
+                // paddingTop: 50,
               },
             }}
           >
             <Drawer.Screen
               name="HomeStack"
               component={HomeStack}
-              initialParams={{ getUserProfile:() => getUserProfile(),user:user}}
               options={{
                 headerShown: false,
                 drawerLabel: "Home",
@@ -216,8 +220,7 @@ export default function VerifiedUser(){
             />
           </Drawer.Navigator>
         </NavigationContainer>
-       </UserContext.Provider>
-      );
+        </UserContext.Provider>);
     }
     else
     {

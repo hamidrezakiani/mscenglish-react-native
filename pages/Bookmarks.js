@@ -284,7 +284,7 @@ const Bookmarks = (props) => {
               setGoTo();
             }}
           >
-            <Text style={{ fontFamily: "Vazir" }}>برو</Text>
+            <Text style={{ fontFamily: "Vazir",color:'#222' }}>برو</Text>
           </Pressable>
         </View>
         {showWords()}
@@ -308,7 +308,7 @@ const Bookmarks = (props) => {
               setDisableButtons(true);
             }}
           >
-            <Text style={{ fontFamily: "Vazir" }}>صفحه قبل</Text>
+            <Text style={{ fontFamily: "Vazir",color:'#222' }}>صفحه قبل</Text>
           </Pressable>
           <Text style={styles.pageNumber}>{Number.parseInt(page)}</Text>
           <Pressable
@@ -323,7 +323,7 @@ const Bookmarks = (props) => {
               setDisableButtons(true);
             }}
           >
-            <Text style={{ fontFamily: "Vazir" }}>صفحه بعد</Text>
+            <Text style={{ fontFamily: "Vazir",color:'#222' }}>صفحه بعد</Text>
           </Pressable>
         </View>
       </View>
@@ -414,13 +414,15 @@ const styles = StyleSheet.create({
     paddingEnd: 5,
     fontSize: 18,
     fontWeight: "500",
+    color:'#222'
   },
   translation: {
     paddingStart: 5,
     paddingEnd: 5,
     fontSize: 15,
     fontFamily: "Vazir",
-    flex: 1
+    flex: 1,
+    color:'#222'
   },
   box: {
     flex: 2,

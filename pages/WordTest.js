@@ -176,12 +176,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "left",
     width: "100%",
+    color:'#222'
   },
   answer: {
     fontWeight: "500",
     fontSize: 15,
     textAlign: "left",
     width: "100%",
+    color:'#222'
   },
   box: {
     backgroundColor: "white",

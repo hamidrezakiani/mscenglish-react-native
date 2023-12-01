@@ -253,7 +253,7 @@ const Words = props => {
                 setGoTo();
               }}
             >
-              <Text style={{ fontFamily: "Vazir"}}>برو</Text>
+              <Text style={{ fontFamily: "Vazir",color:'#222'}}>برو</Text>
             </Pressable>
           </View>
           {showWords()}
@@ -277,7 +277,7 @@ const Words = props => {
                 setDisableButtons(true);
               }}
             >
-              <Text style={{ fontFamily: "Vazir" }}>صفحه قبل</Text>
+              <Text style={{ fontFamily: "Vazir",color:'#222' }}>صفحه قبل</Text>
             </Pressable>
             <Text style={styles.pageNumber}>{Number.parseInt(page)}</Text>
             <Pressable
@@ -292,7 +292,7 @@ const Words = props => {
                 setDisableButtons(true);
               }}
             >
-              <Text style={{ fontFamily: "Vazir" }}>صفحه بعد</Text>
+              <Text style={{ fontFamily: "Vazir",color:'#222' }}>صفحه بعد</Text>
             </Pressable>
           </View>
         </View>
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     borderColor: "navy",
     borderWidth: 1,
     borderRadius: 10,
-    height:50
+    height:50,
   },
   nextPage: {
     backgroundColor: "#f2f2f2",
@@ -383,12 +383,14 @@ const styles = StyleSheet.create({
     paddingStart: 5,
     paddingEnd: 5,
     fontSize: 18,
-    fontWeight: "500",
+    fontWeight: "400",
+    color:'#222',
   },
   translation: {
     paddingStart: 5,
     paddingEnd: 5,
     fontSize: 15,
+    color:'#222',
     fontFamily: "Vazir",
     flex:1
   },

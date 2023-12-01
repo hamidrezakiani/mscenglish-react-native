@@ -86,5 +86,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     fontFamily: "Vazir",
+    color:'#222'
   },
 });

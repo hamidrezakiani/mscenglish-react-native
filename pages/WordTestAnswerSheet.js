@@ -38,10 +38,10 @@ const WordTestAnswerSheet = (props) => {
         <View style={styles.test} key={index}>
           <View style={styles.box}>
             <Text style={styles.question}>
-              {index + 1}.{item.question}
+              {++index}.{item.question}
             </Text>
             <Text style={styles.question}>
-                    {++index}.{item.text}
+                    {item.text}
                   </Text>
             <Text style={styles.question_fa}>{item.translate}</Text>
           </View>
@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "left",
     width: "100%",
+    color:'#222'
   },
   question_fa: {
     fontWeight: "600",
@@ -151,17 +152,20 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontFamily: "Vazir",
     width: "100%",
+    color:'#222'
   },
   answer: {
     fontSize: 14,
     textAlign: "left",
     width: "100%",
+    color:'#222'
   },
   answer_fa: {
     fontSize: 14,
     textAlign: "right",
     width: "100%",
     fontFamily: "Vazir",
+    color:'#222'
   },
   box: {
     backgroundColor: "#fff",

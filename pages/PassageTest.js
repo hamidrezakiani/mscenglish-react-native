@@ -235,12 +235,14 @@ const styles = StyleSheet.create({
     padding:18,
     textAlign: "left",
     width: "100%",
+    color:'#222'
   },
   answer: {
     fontSize: 14,
     textAlign: "left",
     width: "100%",
-    padding:18
+    padding:18,
+    color:'#222'
   },
   box: {
     backgroundColor: "white",
